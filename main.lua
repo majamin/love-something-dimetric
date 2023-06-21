@@ -6,7 +6,7 @@ local colors = {
 }
 
 -- constants
-TILE_SIZE = 40
+TILE_SIZE = 80
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
 
@@ -24,12 +24,8 @@ for y = 0, WINDOW_HEIGHT, TILE_SIZE do
     table.insert(tiles, {
       x = x,
       y = y,
-      -- increase hue for higher x and y values
-      color = {
-        (x / WINDOW_WIDTH) * 0.8,
-        (y / WINDOW_HEIGHT) * 0.8,
-        0.5,
-      },
+      -- random color
+      color = { math.random(), math.random(), math.random() },
     })
   end
 end
@@ -44,8 +40,7 @@ end
 function love.load()
   love.graphics.setBackgroundColor(colors["blue"])
 
-  -- isometric transform
-  -- arguments are: x, y, angle, scalex, scaley, offsetx, offsety, skewx, skewy
+  -- isometric transform (reverse order of operations)
   transform = love.math.newTransform()
   transform:scale(1, 0.5)
   transform:translate(WINDOW_WIDTH / 2, TILE_SIZE)
@@ -53,8 +48,6 @@ function love.load()
 end
 
 function love.draw()
-  -- set color to green
-  love.graphics.setColor(colors["green"])
   love.graphics.applyTransform(transform)
   for _, tile in ipairs(tiles) do
     love.graphics.setColor(tile.color)
