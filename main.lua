@@ -1,3 +1,6 @@
+-- https://github.com/SpaceCat-Chan/LoveKeys
+LoveKeys = require("LoveKeys")
+
 local colors = {
   ["yellow"] = { 0.88, 0.63, 0.05 },
   ["green"] = { 0.29, 0.75, 0.24 },
@@ -44,7 +47,20 @@ local function printTable(t)
   end
 end
 
+function love.keypressed(Key)
+  LoveKeys.keypressed(Key)
+end
+
+function love.keyreleased(Key)
+  LoveKeys.keyreleased(Key)
+end
+
 function love.load()
+  LoveKeys.RegisterKey("up")
+  LoveKeys.RegisterKey("down")
+  LoveKeys.RegisterKey("left")
+  LoveKeys.RegisterKey("right")
+
   love.graphics.setBackgroundColor(colors["blue"])
 
   -- isometric transform (reverse order of operations)
@@ -66,15 +82,22 @@ function love.draw()
 end
 
 function love.update(dt)
-  -- move player
-  if love.keyboard.isDown("up") then
-    player.y = player.y - player.speed * dt
-  elseif love.keyboard.isDown("down") then
-    player.y = player.y + player.speed * dt
-  elseif love.keyboard.isDown("left") then
+  if LoveKeys.up.Held then
     player.x = player.x - player.speed * dt
-  elseif love.keyboard.isDown("right") then
+    player.y = player.y - player.speed * dt
+  end
+  if LoveKeys.down.Held then
     player.x = player.x + player.speed * dt
+    player.y = player.y + player.speed * dt
+  end
+  if LoveKeys.left.Held then
+    player.x = player.x - player.speed * dt
+    player.y = player.y + player.speed * dt
+  end
+  if LoveKeys.right.Held then
+    player.x = player.x + player.speed * dt
+    player.y = player.y - player.speed * dt
   end
 
+  LoveKeys.update(dt)
 end
