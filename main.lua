@@ -17,6 +17,13 @@ love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, {
   vsync = true,
 })
 
+local player = {
+  x = 0,
+  y = 0,
+  speed = 100,
+  color = colors["yellow"],
+}
+
 -- create a grid of tiles that fit inside the window with random colors
 local tiles = {}
 for y = 0, WINDOW_HEIGHT, TILE_SIZE do
@@ -24,8 +31,8 @@ for y = 0, WINDOW_HEIGHT, TILE_SIZE do
     table.insert(tiles, {
       x = x,
       y = y,
-      -- random color
-      color = { math.random(), math.random(), math.random() },
+      -- x and y are used to calculate hue
+      color = { x / WINDOW_WIDTH, y / WINDOW_HEIGHT, 0.5 },
     })
   end
 end
@@ -53,6 +60,21 @@ function love.draw()
     love.graphics.setColor(tile.color)
     love.graphics.rectangle("fill", tile.x, tile.y, TILE_SIZE, TILE_SIZE)
   end
+  -- draw player
+  love.graphics.setColor(player.color)
+  love.graphics.rectangle("fill", player.x, player.y, TILE_SIZE, TILE_SIZE)
 end
 
-function love.update(dt) end
+function love.update(dt)
+  -- move player
+  if love.keyboard.isDown("up") then
+    player.y = player.y - player.speed * dt
+  elseif love.keyboard.isDown("down") then
+    player.y = player.y + player.speed * dt
+  elseif love.keyboard.isDown("left") then
+    player.x = player.x - player.speed * dt
+  elseif love.keyboard.isDown("right") then
+    player.x = player.x + player.speed * dt
+  end
+
+end
